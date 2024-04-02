@@ -1,4 +1,4 @@
-# Assignment WT - Web for Data Science
+# Assignment WT2 - Web for Data Science
 
 As data scientists working with large amounts of data we are constantly seeking ways to gain insights, visualize, and present our results appropriately. We want to not only understand the data but allow our stakeholders to explore and gain their own insights. This involves efficient data handling on the backend, powerful data manipulation and analysis, and visually engaging, interactive data presentations on the front-end. 
 The overall goal is not to create an ordinary static chart/graph but interactive visualization that tells a story and

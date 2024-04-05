@@ -9,9 +9,12 @@ import express from 'express'
 import logger from 'morgan'
 import helmet from 'helmet'
 import { router } from './routes/router.js'
-
+import { connectDB } from './config/mongoose.js'
 
 try {
+  // Connect to database.
+  await connectDB()
+
   const app = express()
   
   // Parse requests of the content type application/json before the routes are registered.

@@ -10,10 +10,13 @@ import logger from 'morgan'
 import helmet from 'helmet'
 import { router } from './routes/router.js'
 import { connectDB } from './config/mongoose.js'
+import { createJSONFile } from './config/csv-parser.js'
 
 try {
   // Connect to database.
   await connectDB()
+
+  await createJSONFile()
 
   const app = express()
   

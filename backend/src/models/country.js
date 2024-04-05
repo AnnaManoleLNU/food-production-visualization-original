@@ -20,11 +20,14 @@ const schema = new Schema({
   },
   foodQuantityInTons: {
     type: Number,
-    required: [true, 'Food quantity is required. Represented in tons.']
+    required: [true, 'Food quantity is required. Represented in tons.'],
+    min: [0, 'Food quantity in tons cannot be negative.']
   },
   yearFoodProduction: {
     type: Number,
-    required: [true, 'Year of food production is required.']
+    required: [true, 'Year of food production is required.'],
+    min: [1961, 'The year of food production measured starts at 1961.'],
+    max: [2021, 'The year of food production measured ends at 2021.']
   },
 }, {
   timestamps: true,

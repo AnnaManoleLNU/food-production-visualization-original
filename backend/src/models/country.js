@@ -11,21 +11,20 @@ const { Schema } = mongoose
 const schema = new Schema({
   name: {
     type: String,
-    required: [true, 'Name is required'],
-
+    required: [true, 'Name of country is required.'],
   },
   foodName: {
     type: String,
-    required: [true, 'Food name is required'],
-    enum: [Maize, Rice]
+    required: [true, 'Food name is required.'],
+    enum: ['Maize', 'Rice', 'Yams', 'Wheat', 'Tomatoes', 'Tea', 'Sweet potatoes', 'Sunflower seed', 'Sugar cane', 'Soybeans', 'Rye', 'Potatoes', 'Oranges', 'Peas dry', 'Palm oil', 'Grapes', 'Coffee green', 'Cocoa beans', 'Meat chicken', 'Bananas', 'Avocados', 'Apples']
   },
   foodQuantityInTons: {
     type: Number,
-    required: [true, 'Food quantity is required']
+    required: [true, 'Food quantity is required. Represented in tons.']
   },
-  yearOfProduction: {
+  yearFoodProduction: {
     type: Number,
-    required: [true, 'Year is required']
+    required: [true, 'Year of food production is required.']
   },
 }, {
   timestamps: true,

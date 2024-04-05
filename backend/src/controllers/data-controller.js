@@ -1,7 +1,7 @@
 export class DataController {
   // POST /data from a csv file
   // CSV file - all countries, years (1961-2021), foods (22)
-  // Maize (corn)
+  // Maize
   // Rice
   // Yams
   // Wheat

@@ -16,7 +16,7 @@ const schema = new Schema({
   foodName: {
     type: String,
     required: [true, 'Food name is required.'],
-    enum: ['Maize', 'Rice', 'Yams', 'Wheat', 'Tomatoes', 'Tea', 'Sweet potatoes', 'Sunflower seed', 'Sugar cane', 'Soybeans', 'Rye', 'Potatoes', 'Oranges', 'Peas dry', 'Palm oil', 'Grapes', 'Coffee green', 'Cocoa beans', 'Meat chicken', 'Bananas', 'Avocados', 'Apples']
+    enum: ['Maize', 'Rice', 'Yams', 'Wheat', 'Tomatoes', 'Tea', 'Sweet potatoes', 'Sunflower seed', 'Sugar cane', 'Soybeans', 'Rye', 'Potatoes', 'Oranges', 'Peas, dry', 'Palm oil', 'Grapes', 'Coffee, green', 'Cocoa beans', 'Meat, chicken', 'Bananas', 'Avocados', 'Apples']
   },
   foodQuantityInTons: {
     type: Number,

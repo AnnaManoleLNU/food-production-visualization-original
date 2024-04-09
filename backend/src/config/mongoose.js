@@ -6,6 +6,7 @@
  */
 
 import mongoose from 'mongoose'
+import { deleteDocumentsFromElasticSearch } from './elastic.js'
 
 /**
  * Establishes a connection to a database.
@@ -20,11 +21,14 @@ export const connectDB = async () => {
   connection.on('error', err => console.error(`MongoDB connection error occurred: ${err}`))
   connection.on('disconnected', () => console.log('MongoDB is disconnected.'))
 
-  // If the Node.js process ends, close the connection and delete all users.
+  // If the Node.js process ends, close the connection.
   process.on('SIGINT', async () => {
     try {
       // Close the MongoDB connection.
       await connection.close()
+
+      // Delete documents from Elasticsearch.
+      await deleteDocumentsFromElasticSearch()
       
       // Exit the process after cleanup.
       process.exit(0)

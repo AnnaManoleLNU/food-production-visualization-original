@@ -1,6 +1,7 @@
 import fs from 'fs-extra'
 import { Country } from '../models/country.js'
 
+
 export class DataController {
   async uploadDataToDatabase(req, res, next) {
     try {
@@ -9,26 +10,36 @@ export class DataController {
       const insertData = []
 
       countriesData.forEach(element => {
-        const name = element.Entity
-        const year = parseInt(element.Year, 10)
+        // I want only for Romania and Sweden
+        if (element.Entity === 'Romania' || element.Entity === 'Sweden') {         
+          const name = element.Entity
+          const year = parseInt(element.Year, 10)
+          console.log(year)
+  
+          for (const [key, value] of Object.entries(element)) {
+            // Skip Entity and Year because there's only one of those
+            if (key !== 'Entity' && key !== 'Year') {
+              //The food name is before the word "Production"
+              const foodName = this.#extractFoodName(key)
+              // Remove commas and convert to number
+              const foodQuantityInTons = parseInt(value.replace(/,/g, ''), 10)
 
-        for (const [key, value] of Object.entries(element)) {
-          // Skip Entity and Year because there's only one of those
-          if (key !== 'Entity' && key !== 'Year') {
-            //The food name is before the word "Production"
-            const foodName = this.#extractFoodName(key)
-            // Remove commas and convert to number
-            const foodQuantityInTons = parseInt(value.replace(/,/g, ''), 10)
-
-            insertData.push({
-              name: name,
-              foodName,
-              foodQuantityInTons,
-              yearFoodProduction: year
-            })
+              const yearFoodProduction = new Date(Date.UTC(year, 0, 1));
+  
+              insertData.push({
+                name: name,
+                foodName,
+                foodQuantityInTons,
+                yearFoodProduction: yearFoodProduction
+              })
+            }
           }
         }
       })
+
+      // Get only the unique country names 
+      const uniqueCountryNames = [...new Set(insertData.map(item => item.name))]
+      console.table(uniqueCountryNames)
 
       await Country.insertMany(insertData)
 
@@ -52,4 +63,6 @@ export class DataController {
       return match[1].trim()
     }
   }
+
+
 }

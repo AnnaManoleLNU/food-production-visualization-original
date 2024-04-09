@@ -24,20 +24,9 @@ const schema = new Schema({
     min: [0, 'Food quantity in tons cannot be negative.']
   },
   yearFoodProduction: {
-    type: Number,
-    required: [true, 'Year of food production is required.'],
-    min: [1961, 'The year of food production measured starts at 1961.'],
-    max: [2021, 'The year of food production measured ends at 2021.']
+    type: Date,
+    required: [true, 'Year of food production is required.']
   },
-}, {
-  timestamps: true,
-  toJSON: {
-    transform: function (doc, ret) {
-      delete ret._id
-      delete ret.__v
-    },
-    virtuals: true
-  }
 })
 
 export const Country = mongoose.model('Country', schema)

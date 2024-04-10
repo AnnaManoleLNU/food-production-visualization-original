@@ -6,7 +6,6 @@
  */
 
 import mongoose from 'mongoose'
-import { deleteDocumentsFromElasticSearch } from './elastic.js'
 
 /**
  * Establishes a connection to a database.
@@ -26,9 +25,6 @@ export const connectDB = async () => {
     try {
       // Close the MongoDB connection.
       await connection.close()
-
-      // Delete documents from Elasticsearch.
-      await deleteDocumentsFromElasticSearch()
       
       // Exit the process after cleanup.
       process.exit(0)

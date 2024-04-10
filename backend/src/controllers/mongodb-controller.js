@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import { Country } from '../models/country.js'
 
 
-export class DataController {
+export class MongoDbController {
   async uploadDataToDatabase(req, res, next) {
     try {
       const countriesData = await fs.readJSON('./world_food_production.json')

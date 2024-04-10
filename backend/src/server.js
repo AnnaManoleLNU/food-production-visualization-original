@@ -10,13 +10,10 @@ import logger from 'morgan'
 import helmet from 'helmet'
 import { router } from './routes/router.js'
 import { connectDB } from './config/mongoose.js'
-import { addDocumentsToElasticSearch } from './config/elastic.js'
 
 try {
   // Connect to database.
   await connectDB()
-
-  await addDocumentsToElasticSearch()
 
   const app = express()
   

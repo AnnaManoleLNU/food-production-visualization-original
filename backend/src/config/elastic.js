@@ -20,7 +20,6 @@ export const addDocumentsToElasticSearch = async () => {
   })
 
   const countriesData = await Country.find({ name: { $in: ['Romania', 'Sweden'] } }).exec()
-  console.log(countriesData[0])
 
   const body = countriesData.flatMap(doc => {
     const { _id, name, foodName, foodQuantityInTons, yearFoodProduction } = doc
@@ -35,9 +34,7 @@ export const addDocumentsToElasticSearch = async () => {
     ]
   })
 
-  await client.bulk({
-    body: body
-  })
+  await client.bulk({ body: body })
 
   console.log('Successfully indexed countries data')
 }

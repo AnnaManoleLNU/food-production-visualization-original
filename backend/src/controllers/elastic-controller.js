@@ -53,19 +53,40 @@ export class ElasticController {
 
   async getDataFromElasticSearch(req, res, next) {
     try {
-      const { body } = await this.#client.search({
+      const response = await this.#client.search({
         index: 'countries',
         body: {
           query: {
-            match_all: {}
+            range: {
+              yearFoodProduction: { 
+                gte: "2018-01-01", // From January 1st, 2018
+                lte: "2021-12-31", // Up to December 31st, 2021
+              }
+            }
           }
-        }
+        },
+        size: 1000
       })
 
-      res.status(200).json(body.hits.hits)
+      res.status(200).json(response)
     } catch (error) {
       console.error('Error getting data from Elasticsearch:', error)
       res.status(500).json({ message: "Error getting data from Elasticsearch", error: error.message })
+    }
+  }
+
+  async deleteDataFromElasticSearch(req, res, next) {
+    try {
+      if (await this.#client.indices.exists({ index: 'countries' })) {
+        await this.#client.indices.delete({ index: 'countries' })
+
+        res.status(200).json({ message: 'Index deleted successfully' })
+      } else {
+        res.status(400).json({ message: 'Index does not exist' })
+      }
+    } catch (error) {
+      console.error('Error deleting data from Elasticsearch:', error)
+      res.status(500).json({ message: "Error deleting data from Elasticsearch", error: error.message })
     }
   }
 

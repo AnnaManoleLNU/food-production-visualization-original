@@ -16,3 +16,9 @@ elasticRouter.get('/', (req, res, next) => {
   // Require authorization especially if public API - TODO!!!
   controller.getDataFromElasticSearch(req, res, next)
 })
+
+// Delete data from Elasticsearch. /elastic
+elasticRouter.delete('/', (req, res, next) => {
+  // Require authorization especially if public API - TODO!!!
+  controller.deleteDataFromElasticSearch(req, res, next)
+})

@@ -105,7 +105,7 @@ export class ElasticController {
       })
 
       res.status(200).json({
-        response
+        countries: response.aggregations.unique_countries.buckets,
       })
     } catch (error) {
       console.error('Error getting data from Elasticsearch:', error)

@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
 import { Country } from '../models/country.js'
-
+import { getNames } from 'country-list'
 
 export class MongoDbController {
   async uploadDataToDatabase(req, res, next) {
@@ -10,11 +10,10 @@ export class MongoDbController {
       const insertData = []
 
       countriesData.forEach(element => {
-        // I want only for Romania and Sweden
-        if (element.Entity === 'Romania' || element.Entity === 'Sweden') {         
+        // if it's a valid country name
+        if (element.Entity && this.#isValidCountry(element.Entity)) {         
           const name = element.Entity
           const year = parseInt(element.Year, 10)
-          console.log(year)
   
           for (const [key, value] of Object.entries(element)) {
             // Skip Entity and Year because there's only one of those
@@ -52,6 +51,10 @@ export class MongoDbController {
       console.error('Error uploading data to database:', error)
       res.status(500).json({ message: "Error uploading data to the database", error: error.message })
     }
+  }
+
+  #isValidCountry(countryName) {
+    return getNames().includes(countryName)
   }
 
   #extractFoodName(key) {

@@ -21,12 +21,12 @@ export class ElasticController {
           index: 'countries'
         })
 
-        const countriesData = await Country.find({ name: { $in: ['Romania', 'Sweden'] } }).exec()
+        const countriesData = await Country.find().exec()
 
         const body = countriesData.flatMap(doc => {
-          const { _id, name, foodName, foodQuantityInTons, yearFoodProduction } = doc
+          const { name, foodName, foodQuantityInTons, yearFoodProduction } = doc
           return [
-            { index: { _index: 'countries', _id: _id.toString() } },
+            { index: { _index: 'countries' } },
             {
               name,
               foodName,
@@ -51,24 +51,28 @@ export class ElasticController {
     }
   }
 
-  async getDataFromElasticSearch(req, res, next) {
+  async getAllCountriesYear2018(req, res, next) {
     try {
       const response = await this.#client.search({
         index: 'countries',
+        scroll: '1m', // keep the search context alive for 1 minute
+        size: 1000, // return 1000 documents per page
         body: {
           query: {
             range: {
               yearFoodProduction: { 
-                gte: "2018-01-01", // From January 1st, 2018
-                lte: "2021-12-31", // Up to December 31st, 2021
+                gte: "2018-01-01T00:00:00", // From January 1st, 2018 at 00:00:00
+                lte: "2018-12-31T23:59:59", // Up to December 31st, 2018 at 23:59:59
               }
             }
           }
         },
-        size: 1000
       })
 
-      res.status(200).json(response)
+      res.status(200).json({
+        totalDocuments: response.hits.total.value,
+        documents: response.hits.hits
+      })
     } catch (error) {
       console.error('Error getting data from Elasticsearch:', error)
       res.status(500).json({ message: "Error getting data from Elasticsearch", error: error.message })

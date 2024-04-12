@@ -14,7 +14,7 @@ elasticRouter.post('/', (req, res, next) => {
 // Endpoint to get data from Elasticsearch. /elastic
 elasticRouter.get('/', (req, res, next) => {
   // Require authorization especially if public API - TODO!!!
-  controller.getDataFromElasticSearch(req, res, next)
+  controller.getAllCountriesYear2018(req, res, next)
 })
 
 // Delete data from Elasticsearch. /elastic

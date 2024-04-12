@@ -10,10 +10,10 @@ export class MongoDbController {
       const insertData = []
 
       countriesData.forEach(element => {
-        // if it's a valid country name
-        if (element.Entity && this.#isValidCountry(element.Entity)) {         
+        // if it's a valid country name with data for 2018
+        if (this.#isValidCountry(element.Entity) && element.Year === "2018") {         
           const name = element.Entity
-          const year = parseInt(element.Year, 10)
+          const year = 2018
   
           for (const [key, value] of Object.entries(element)) {
             // Skip Entity and Year because there's only one of those
@@ -35,13 +35,6 @@ export class MongoDbController {
           }
         }
       })
-
-      // Get only the unique country names 
-      const uniqueCountryNames = [...new Set(insertData.map(item => item.name))]
-      console.table(uniqueCountryNames)
-
-      // Get only the unique food names
-      const uniqueFoodNames = [...new Set(insertData.map(item => item.foodName))]
 
       await Country.insertMany(insertData)
 

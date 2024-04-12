@@ -57,16 +57,6 @@ export class ElasticController {
         index: 'countries',
         scroll: '1m', // keep the search context alive for 1 minute
         size: 4000, // return 4000 documents per page
-        body: {
-          query: {
-            range: {
-              yearFoodProduction: { 
-                gte: "2018-01-01T00:00:00", // From January 1st, 2018 at 00:00:00
-                lte: "2018-12-31T23:59:59", // Up to December 31st, 2018 at 23:59:59
-              }
-            }
-          }
-        },
       })
 
       res.status(200).json({
@@ -93,14 +83,6 @@ export class ElasticController {
               }
             }
           },
-          query: {
-            range: {
-              yearFoodProduction: { 
-                gte: "2018-01-01T00:00:00", // From January 1st, 2018 at 00:00:00
-                lte: "2018-12-31T23:59:59", // Up to December 31st, 2018 at 23:59:59
-              }
-          }
-        }
       }
       })
 
@@ -127,19 +109,11 @@ export class ElasticController {
               }
             }
           },
-          query: {
-            range: {
-              yearFoodProduction: { 
-                gte: "2018-01-01T00:00:00", // From January 1st, 2018 at 00:00:00
-                lte: "2018-12-31T23:59:59", // Up to December 31st, 2018 at 23:59:59
-              }
-          }
-        }
       }
       })
 
       res.status(200).json({
-        response
+        foods: response.aggregations.unique_food.buckets,
       })
     } catch (error) {
       console.error('Error getting data from Elasticsearch:', error)
@@ -159,12 +133,6 @@ export class ElasticController {
             bool: {
               must: [
                 { match: { name: country } },
-                { range: {
-                  yearFoodProduction: { 
-                    gte: "2018-01-01T00:00:00", // From January 1st, 2018 at 00:00:00
-                    lte: "2018-12-31T23:59:59", // Up to December 31st, 2018 at 23:59:59
-                  }
-                }}
               ]
             }
           }

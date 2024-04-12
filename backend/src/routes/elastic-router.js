@@ -13,8 +13,17 @@ elasticRouter.post('/', (req, res, next) => {
 
 // Endpoint to get data from Elasticsearch. /elastic
 elasticRouter.get('/', (req, res, next) => {
-  // Require authorization especially if public API - TODO!!!
-  controller.getAllCountriesYear2018(req, res, next)
+  controller.getAllDataYear2018(req, res, next)
+})
+
+// Endpoint to get all country names from Elasticsearch. /elastic/countries
+elasticRouter.get('/countries', (req, res, next) => {
+  controller.getAllCountryNames(req, res, next)
+})
+
+// Endpoint to get all food names from Elasticsearch. /elastic/foods
+elasticRouter.get('/foods', (req, res, next) => {
+  controller.getAllFoodNames(req, res, next)
 })
 
 // Delete data from Elasticsearch. /elastic

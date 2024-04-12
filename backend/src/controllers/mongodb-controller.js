@@ -40,6 +40,9 @@ export class MongoDbController {
       const uniqueCountryNames = [...new Set(insertData.map(item => item.name))]
       console.table(uniqueCountryNames)
 
+      // Get only the unique food names
+      const uniqueFoodNames = [...new Set(insertData.map(item => item.foodName))]
+
       await Country.insertMany(insertData)
 
       res.status(200).json({

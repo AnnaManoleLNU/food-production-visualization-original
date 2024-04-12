@@ -23,9 +23,8 @@ function DataComponent() {
       }
 
       const jsonData = await response.json()
-      console.log(jsonData.hits.hits, jsonData.hits.hits.length)
-      setData(jsonData.hits.hits)
-    };
+      setData(jsonData.documents)
+    }
 
     fetchData()
   }, [])

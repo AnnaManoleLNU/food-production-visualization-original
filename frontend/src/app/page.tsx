@@ -4,7 +4,7 @@ import DataVisualizer from "./components/data-visualizer"
 export default function Home() {
   return (
     <main>
-      <Title>World Food Production</Title>
+      <Title>Global Food Production in 2018</Title>
       <DataVisualizer />
     </main>
   )

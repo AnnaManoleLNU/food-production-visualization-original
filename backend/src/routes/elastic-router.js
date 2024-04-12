@@ -26,6 +26,11 @@ elasticRouter.get('/foods', (req, res, next) => {
   controller.getAllFoodNames(req, res, next)
 })
 
+// Endpoint to get all data for a specific country from Elasticsearch. /elastic/countries/:country
+elasticRouter.get('/countries/:country', (req, res, next) => {
+  controller.getDataForCountry(req, res, next)
+})
+
 // Delete data from Elasticsearch. /elastic
 elasticRouter.delete('/', (req, res, next) => {
   // Require authorization especially if public API - TODO!!!

@@ -147,6 +147,40 @@ export class ElasticController {
     }
   }
 
+  async getDataForCountry(req, res, next) {
+    try {
+      const { country } = req.params
+
+      const response = await this.#client.search({
+        index: 'countries',
+        size: 22, // There are 22 food types supported in the dataset
+        body: {
+          query: {
+            bool: {
+              must: [
+                { match: { name: country } },
+                { range: {
+                  yearFoodProduction: { 
+                    gte: "2018-01-01T00:00:00", // From January 1st, 2018 at 00:00:00
+                    lte: "2018-12-31T23:59:59", // Up to December 31st, 2018 at 23:59:59
+                  }
+                }}
+              ]
+            }
+          }
+        }
+      })
+
+      res.status(200).json({
+        totalDocuments: response.hits.total.value,
+        documents: response.hits.hits
+      })
+    } catch (error) {
+      console.error('Error getting data from Elasticsearch:', error)
+      res.status(500).json({ message: "Error getting data from Elasticsearch", error: error.message })
+    }
+  }
+
   async deleteDataFromElasticSearch(req, res, next) {
     try {
       if (await this.#client.indices.exists({ index: 'countries' })) {

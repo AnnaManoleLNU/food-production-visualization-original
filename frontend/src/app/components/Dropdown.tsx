@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react"
 
 type Country = {
@@ -6,10 +5,14 @@ type Country = {
   doc_count: number
 }
 
-export default function Dropdown() {
+type DropdownProps = {
+  selectedCountry: string | null
+  onSelectedCountry: (country: string) => void
+}
+
+export default function Dropdown({selectedCountry, onSelectedCountry} : DropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [countries, setCountries] = useState<Country[]>([])
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
   const toggleDropdown = () => setIsOpen(!isOpen)
 
   useEffect(() => {
@@ -30,19 +33,15 @@ export default function Dropdown() {
     fetchData()
   }, [])
 
-  const handleSelectCountry = (country: string) => {
-    setSelectedCountry(country)
-    setIsOpen(false) // Close the dropdown after selection
-  }
 
   return (
     <div className="flex justify-center items-center">
     <div className="relative">
       <button
         onClick={toggleDropdown}
-        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-800 focus:outline-none"
+        className="border border-blue-800 py-2 px-4 rounded hover:border-blue-300 focus:outline-none"
       >
-        {selectedCountry || '-- Choose a country --'}
+        {selectedCountry || 'Choose a country'}
       </button>
       {isOpen && (
         <ul className="absolute left-1/2 transform -translate-x-1/2 text-center bg-white border border-gray-200 w-52 max-h-56 overflow-y-scroll rounded shadow-lg mt-1">
@@ -50,7 +49,10 @@ export default function Dropdown() {
             <li 
               key={index} 
               className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleSelectCountry(country.key)}
+              onClick={() => {
+                onSelectedCountry(country.key)
+                setIsOpen(false)
+              }}
             >
               {country.key}
             </li>

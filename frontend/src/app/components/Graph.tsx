@@ -17,6 +17,32 @@ export default function Graph({ selectedCountry }: GraphProps) {
   const d3Container = useRef(null)
 
   useEffect(() => {
+    // Append tooltip only if it doesn't exist
+    if (d3.select('body').selectAll('.tooltip').empty()) {
+      d3.select('body').append('div')
+        .attr('class', 'tooltip')
+        // Add initial styles, including setting the opacity to 0
+        .style('opacity', 0)
+        .style('position', 'absolute')
+        .style('text-align', 'center')
+        .style('padding', '8px')
+        .style('font', '12px sans-serif')
+        .style('background', 'white')
+        .style('border', 'solid')
+        .style('border-width', '2px')
+        .style('border-radius', '5px')
+        .style('pointer-events', 'none')
+        .style('display', 'none') // Initially hidden
+    }
+  
+    return () => {
+      // Select the tooltip and remove it when the component is unmounted
+      d3.select('.tooltip').remove()
+    }
+  }, []) // The empty array ensures this effect runs only on mount and cleanup on unmount
+  
+
+  useEffect(() => {
     if (selectedCountry) {
       setIsVisible(true)
       const fetchData = async () => {
@@ -57,19 +83,6 @@ export default function Graph({ selectedCountry }: GraphProps) {
       .append("g")
       .attr("transform", `translate(${width / 2}, ${height / 2})`)
 
-    const tooltip = d3.select("body").append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0)
-      .style("position", "absolute")
-      .style("text-align", "center")
-      .style("padding", "8px")
-      .style("font", "12px sans-serif")
-      .style("background", "white")
-      .style("border", "solid")
-      .style("border-width", "1px")
-      .style("border-radius", "5px")
-      .style("pointer-events", "none")
-
     const arcGenerator = d3.arc()
       .innerRadius(0)
       .outerRadius(radius)
@@ -93,6 +106,8 @@ export default function Graph({ selectedCountry }: GraphProps) {
     const pie = d3.pie().value(d => d.foodQuantityInTons)
     const data_ready = pie(largeValues)
 
+    const tooltip = d3.select('.tooltip')
+
     svg.selectAll("path")
       .data(data_ready)
       .enter()
@@ -102,18 +117,18 @@ export default function Graph({ selectedCountry }: GraphProps) {
       .attr("stroke", "white")
       .style("stroke-width", "2px")
       .style("opacity", 0.7)
-      .on("mouseover", function(event, d) {
-        tooltip.transition().duration(200).style("opacity", 1)
-        tooltip.html(`${d.data.foodName}: ${d.data.foodQuantityInTons.toLocaleString()} tons`)
-          .style("left", event.pageX + "px")
-          .style("top", event.pageY - 28 + "px")
+      .on('mouseover', function(event, d) {
+        tooltip
+          .style('display', 'block') 
+          .style('opacity', 1)
+          .html(`${d.data.foodName}: ${d.data.foodQuantityInTons} tons`)
+          .style('left', `${event.pageX}px`) 
+          .style('top', `${event.pageY - 28}px`) // Adjust the position to be above the cursor
       })
-      .on("mousemove", function(event) {
-        tooltip.style("left", event.pageX + "px")
-          .style("top", event.pageY - 28 + "px")
-      })
-      .on("mouseout", function() {
-        tooltip.transition().duration(500).style("opacity", 0)
+      .on('mouseout', function() {
+        tooltip
+          .style('opacity', 0)
+          .style('display', 'none') // Hide it by setting display to none
       })
 
     svg.selectAll("text")

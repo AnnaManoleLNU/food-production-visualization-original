@@ -101,7 +101,8 @@ export default function Graph({ selectedCountry }: GraphProps) {
       })
     }
 
-    const color = d3.scaleOrdinal(d3.schemeBlues[5])
+    const color = d3.scaleOrdinal(d3.schemeBlues[3])
+    const otherColor = '#18B05A'
 
     const pie = d3.pie().value(d => d.foodQuantityInTons)
     const data_ready = pie(largeValues)
@@ -113,7 +114,7 @@ export default function Graph({ selectedCountry }: GraphProps) {
       .enter()
       .append("path")
       .attr("d", arcGenerator)
-      .attr("fill", d => color(d.data.foodName))
+      .attr("fill", d => d.data.foodName === "Other" ? otherColor : color(d.data.foodName)) // Use other color for "Other"
       .attr("stroke", "white")
       .style("stroke-width", "2px")
       .style("opacity", 0.7)

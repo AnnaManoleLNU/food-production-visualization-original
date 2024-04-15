@@ -18,7 +18,22 @@ export class ElasticController {
       // if there is no index, create one
       if (!(await this.#client.indices.exists({ index: 'countries' }))) {
         await this.#client.indices.create({
-          index: 'countries'
+          index: 'countries',
+          body: {
+            mappings: {
+              properties: {
+                name: {
+                  type: "text",
+                  fields: {
+                    keyword: {
+                      type: "keyword",
+                      ignore_above: 256
+                    }
+                  }
+                }
+              }
+            }
+          }
         })
 
         const countriesData = await Country.find().exec()
@@ -66,6 +81,33 @@ export class ElasticController {
     } catch (error) {
       console.error('Error getting data from Elasticsearch:', error)
       res.status(500).json({ message: "Error getting data from Elasticsearch", error: error.message })
+    }
+  }
+
+  async getAllDataYear2018OneCountry(req, res, next) {
+    try {
+      const { country } = req.params
+      const response = await this.#client.search({
+        index: 'countries',
+        size: 44,
+        body: {
+          query: {
+            bool: {
+              must: [
+                { term: {"name.keyword": country} } // Exact name, case sensitive.
+              ]
+            }
+          }
+        }
+      })
+      res.status(200).json({
+        totalDocuments: response.hits.total.value,
+        documents: response.hits.hits.map(hit => hit._source)
+      })
+    } catch (error) {
+      console.error('Error getting data from Elasticsearch:', error)
+      res.status(500).json({ message: "Error getting data from Elasticsearch", error: error.message })
+      next(error)
     }
   }
 

@@ -31,7 +31,7 @@ export default function Dropdown({selectedCountry, onSelectedCountry} : Dropdown
     }
 
     fetchData()
-  }, [])
+  }, []) // Empty array = runs only once after the initial render
 
 
   return (

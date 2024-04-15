@@ -10,8 +10,6 @@ export default function Visualizer() {
     setSelectedCountry(country)
   }
 
-
-
   return (
     <div>
       <Dropdown

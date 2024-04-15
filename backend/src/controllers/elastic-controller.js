@@ -84,12 +84,12 @@ export class ElasticController {
     }
   }
 
-  async getAllDataYear2018OneCountry(req, res, next) {
+  async getDataForCountry(req, res, next) {
     try {
       const { country } = req.params
       const response = await this.#client.search({
         index: 'countries',
-        size: 44,
+        size: 22,
         body: {
           query: {
             bool: {
@@ -107,7 +107,6 @@ export class ElasticController {
     } catch (error) {
       console.error('Error getting data from Elasticsearch:', error)
       res.status(500).json({ message: "Error getting data from Elasticsearch", error: error.message })
-      next(error)
     }
   }
 
@@ -156,34 +155,6 @@ export class ElasticController {
 
       res.status(200).json({
         foods: response.aggregations.unique_food.buckets,
-      })
-    } catch (error) {
-      console.error('Error getting data from Elasticsearch:', error)
-      res.status(500).json({ message: "Error getting data from Elasticsearch", error: error.message })
-    }
-  }
-
-  async getDataForCountry(req, res, next) {
-    try {
-      const { country } = req.params
-
-      const response = await this.#client.search({
-        index: 'countries',
-        size: 22, // There are 22 food types supported in the dataset
-        body: {
-          query: {
-            bool: {
-              must: [
-                { match: { name: country } },
-              ]
-            }
-          }
-        }
-      })
-
-      res.status(200).json({
-        totalDocuments: response.hits.total.value,
-        documents: response.hits.hits
       })
     } catch (error) {
       console.error('Error getting data from Elasticsearch:', error)

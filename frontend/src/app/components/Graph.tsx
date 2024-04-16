@@ -3,13 +3,13 @@ import * as d3 from "d3"
 
 type GraphProps = {
   selectedCountry: string | null
-};
+}
 
 type Country = {
   name: string
   foodName: string
   foodQuantityInTons: number
-};
+}
 
 export default function Graph({ selectedCountry }: GraphProps) {
   const [isVisible, setIsVisible] = useState(false)
@@ -17,7 +17,6 @@ export default function Graph({ selectedCountry }: GraphProps) {
   const d3Container = useRef(null)
 
   useEffect(() => {
-    // Append tooltip only if it doesn't exist
     if (d3.select("body").selectAll(".tooltip").empty()) {
       d3.select("body")
         .append("div")
@@ -35,7 +34,6 @@ export default function Graph({ selectedCountry }: GraphProps) {
     }
 
     return () => {
-      // Select the tooltip and remove it when the component is unmounted
       d3.select(".tooltip").remove()
     }
   }, [])
@@ -44,18 +42,13 @@ export default function Graph({ selectedCountry }: GraphProps) {
     if (selectedCountry) {
       setIsVisible(true)
       const fetchData = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:3001/elastic/countries/${selectedCountry}`
-          );
-          if (!response.ok) {
-            throw new Error(`Failed to fetch: ${response.statusText}`);
-          }
-          const jsonData = await response.json();
-          setCountryData(jsonData.documents);
-        } catch (error) {
-          console.error("Error fetching data:", error);
+        const response = await fetch(`http://localhost:3001/elastic/countries/${selectedCountry}`)
+        if (!response.ok) {
+          console.error("Failed to fetch:", response.statusText)
+          return
         }
+        const jsonData = await response.json()
+        setCountryData(jsonData.documents)
       }
       fetchData()
     } else {
@@ -65,87 +58,55 @@ export default function Graph({ selectedCountry }: GraphProps) {
 
   useEffect(() => {
     if (isVisible && countryData.length > 0) {
-      drawChart()
+      drawChart(countryData, true)
     }
   }, [isVisible, countryData])
 
-  const drawChart = (dataSubset?: Country[] | null) => {
+  const drawChart = (data, initial = false) => {
+    const totalQuantity = d3.sum(data, d => d.foodQuantityInTons)
+    const threshold = totalQuantity * 0.05
+    let dataToDisplay = data.filter(d => d.foodQuantityInTons > threshold)
+    const otherQuantity = totalQuantity - d3.sum(dataToDisplay, d => d.foodQuantityInTons)
+
+    if (otherQuantity > threshold || initial) {
+      dataToDisplay.push({
+        name: "Other",
+        foodName: "Other",
+        foodQuantityInTons: otherQuantity
+      })
+    }
+
     const width = 500
     const height = 500
     const margin = 40
     const radius = Math.min(width, height) / 2 - margin
 
-    d3.select(d3Container.current).selectAll("*").remove()
-    const svg = d3
-      .select(d3Container.current)
+    const svg = d3.select(d3Container.current)
+      .html("")
       .append("svg")
       .attr("width", width)
       .attr("height", height)
       .append("g")
       .attr("transform", `translate(${width / 2}, ${height / 2})`)
 
+    const pie = d3.pie().value(d => d.foodQuantityInTons)
     const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius)
-    const totalQuantity = d3.sum(countryData, (d) => d.foodQuantityInTons)
-    const threshold = totalQuantity * 0.05;
-    
-    const largeValues = countryData.filter(
-      (d) => d.foodQuantityInTons > threshold
-    );
-    const otherValues = countryData.filter(
-      (d) => d.foodQuantityInTons < threshold
-    );   
-    const otherValuesTotal = d3.sum(
-      countryData.filter((d) => d.foodQuantityInTons <= threshold),
-      (d) => d.foodQuantityInTons
-    );
-
-    const dataToDisplay = dataSubset ? dataSubset : largeValues
-    
-    if (otherValuesTotal > 0) {
-      largeValues.push({
-        name: "Other",
-        foodName: "Other",
-        foodQuantityInTons: otherValuesTotal,
-      })
-    }
-
-    const color = d3.scaleOrdinal(d3.schemeBlues[3])
+    const color = d3.scaleOrdinal([
+      "#abd9e9", "#74add1", "#4575b4", "#313695"  // Example shades of blue
+  ])
     const otherColor = "#18B05A"
 
-    const pie = d3.pie().value((d) => d.foodQuantityInTons)
-    const dataReady = pie(dataToDisplay)
-    
-    const tooltip = d3.select(".tooltip")
+    const update = svg.selectAll("path")
+      .data(pie(dataToDisplay))
 
-    // Create the arc paths and animate them
-    svg
-      .selectAll("path")
-      .data(dataReady)
-      .enter()
+    update.enter()
       .append("path")
-      .attr("fill", (d) =>
-        d.data.foodName === "Other" ? otherColor : color(d.data.foodName)
-      )
+      .attr("d", arcGenerator)
+      .attr("fill", d => d.data.foodName === "Other" ? otherColor : color(d.data.foodName))
       .attr("stroke", "white")
       .style("stroke-width", "2px")
-      .attr("d", arcGenerator)
-      .each(function (d) {
-        this._current = d;
-      }) // store the initial angles
-      .transition() 
-      .duration(750) 
-      .attrTween("d", function (d) {
-        var interpolate = d3.interpolate({ startAngle: 0, endAngle: 0 }, d)
-        return function (t) {
-          return arcGenerator(interpolate(t))
-        }
-      })
-
-    // Tooltip interaction
-    svg
-      .selectAll("path")
       .on("mouseover", function (event, d) {
-        tooltip
+        d3.select(".tooltip")
           .style("display", "block")
           .style("opacity", 1)
           .html(`${d.data.foodName}: ${d.data.foodQuantityInTons} tons`)
@@ -153,30 +114,46 @@ export default function Graph({ selectedCountry }: GraphProps) {
           .style("top", `${event.pageY - 28}px`)
       })
       .on("mouseout", function () {
-        tooltip.style("opacity", 0).style("display", "none");
+        d3.select(".tooltip")
+          .style("opacity", 0)
+          .style("display", "none")
       })
-      .on("click", function (event, d) {
+      .on("click", (event, d) => {
         if (d.data.foodName === "Other") {
-          drawChart(otherValues)
+          drawChart(data.filter(d => d.foodQuantityInTons <= threshold), false)
+        } else {
+          drawChart(countryData, true)
         }
       })
+      .each(function(d) { this._current = { startAngle: d.startAngle, endAngle: d.startAngle } })
+        .transition().duration(750)
+        .attrTween("d", function(d) {
+            const interpolate = d3.interpolate(this._current, d)
+            this._current = interpolate(0)
+            return function(t) { return arcGenerator(interpolate(t)) }
+        })
 
-    svg
-      .selectAll("text")
-      .data(dataReady)
-      .enter()
+    // Text labels
+    const text = svg.selectAll("text")
+      .data(pie(dataToDisplay))
+
+    text.enter()
       .append("text")
-      // .filter((d) => d.data.foodQuantityInTons > threshold)
-      .text((d) => d.data.foodName)
-      .attr("transform", (d) => `translate(${arcGenerator.centroid(d)})`)
+      .merge(text)
+      .attr("transform", d => `translate(${arcGenerator.centroid(d)})`)
+      .attr("dy", "0.35em")
       .style("text-anchor", "middle")
-      .style("font-size", 14)
-      .style("color", "white")
+      .text(d => d.data.foodName)
+      .style("fill", "white")
+
+    text.exit().remove()
   }
 
   return (
-    <div className="flex justify-center">
-      {isVisible && <div ref={d3Container}></div>}
+    <div className="flex flex-col justify-center items-center text-center">
+                    <p className="mt-4 mb-6 text-sm">Click on "Other" to display more information. Click on any food to go back to the start.<br /><strong> Note that the data may be innacurate. </strong>
+                    </p>
+      {isVisible &&  <div ref={d3Container}></div>}
     </div>
   )
 }

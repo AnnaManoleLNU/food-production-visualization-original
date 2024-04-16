@@ -21,15 +21,13 @@ export default function Graph({ selectedCountry }: GraphProps) {
     if (d3.select('body').selectAll('.tooltip').empty()) {
       d3.select('body').append('div')
         .attr('class', 'tooltip')
-        // Add initial styles, including setting the opacity to 0
-        .style('opacity', 0)
         .style('position', 'absolute')
         .style('text-align', 'center')
         .style('padding', '8px')
-        .style('font', '12px sans-serif')
         .style('background', 'white')
         .style('border', 'solid')
-        .style('border-width', '2px')
+        .style('border-color', '#1e3a8a')
+        .style('border-width', '1px')
         .style('border-radius', '5px')
         .style('pointer-events', 'none')
         .style('display', 'none') // Initially hidden
@@ -40,7 +38,6 @@ export default function Graph({ selectedCountry }: GraphProps) {
       d3.select('.tooltip').remove()
     }
   }, []) // The empty array ensures this effect runs only on mount and cleanup on unmount
-  
 
   useEffect(() => {
     if (selectedCountry) {
@@ -117,7 +114,6 @@ export default function Graph({ selectedCountry }: GraphProps) {
       .attr("fill", d => d.data.foodName === "Other" ? otherColor : color(d.data.foodName)) // Use other color for "Other"
       .attr("stroke", "white")
       .style("stroke-width", "2px")
-      .style("opacity", 0.7)
       .on('mouseover', function(event, d) {
         tooltip
           .style('display', 'block') 
@@ -141,6 +137,7 @@ export default function Graph({ selectedCountry }: GraphProps) {
       .attr("transform", d => `translate(${arcGenerator.centroid(d)})`)
       .style("text-anchor", "middle")
       .style("font-size", 14)
+      .style("color", "white")
   }
 
   return (

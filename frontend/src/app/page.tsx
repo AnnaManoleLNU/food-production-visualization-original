@@ -3,9 +3,9 @@ import Visualizer from "./components/Visualizer"
 
 export default function Home() {
   return (
-    <main>
+    <main  >
       <Title>Global Food Production in 2018</Title>
       <Visualizer />
     </main>
-  )
+  );
 }

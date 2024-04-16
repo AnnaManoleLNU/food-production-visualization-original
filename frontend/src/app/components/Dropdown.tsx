@@ -13,7 +13,7 @@ type DropdownProps = {
 export default function Dropdown({selectedCountry, onSelectedCountry} : DropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [countries, setCountries] = useState<Country[]>([])
-  const toggleDropdown = () => setIsOpen(!isOpen)
+  const [inputValue, setInputValue] = useState("")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,33 +33,58 @@ export default function Dropdown({selectedCountry, onSelectedCountry} : Dropdown
     fetchData()
   }, []) // Empty array = runs only once after the initial render
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value)
+    setIsOpen(true)
+  }
+
+  const handleClearInput = () => {
+    setInputValue("")
+    setIsOpen(false)
+    onSelectedCountry("") // Notify the parent component that no country is selected
+  }
+
+  const filteredCountries = countries.filter(country =>
+    country.key.toLowerCase().includes(inputValue.toLowerCase())
+  )
 
   return (
     <div className="flex justify-center items-center">
-    <div className="relative">
-      <button
-        onClick={toggleDropdown}
-        className="border border-blue-800 py-2 px-4 rounded hover:border-blue-300 focus:outline-none"
-      >
-        {selectedCountry || 'Choose a country'}
-      </button>
-      {isOpen && (
-        <ul className="absolute left-1/2 transform -translate-x-1/2 text-center bg-white border border-gray-200 w-52 max-h-56 overflow-y-scroll rounded shadow-lg mt-1">
-          {countries.map((country, index) => (
-            <li 
-              key={index} 
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                onSelectedCountry(country.key)
-                setIsOpen(false)
-              }}
-            >
-              {country.key}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+      <div className="relative">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onClick={() => setIsOpen(true)}
+          placeholder="Choose a country"
+          className="text-center border border-blue-900 py-2 px-4 rounded hover:border-blue-300 focus:outline-none"
+        />
+        {inputValue && (
+          <button
+            onClick={handleClearInput}
+            className="absolute right-0 top-0 mt-3 mr-4"
+          >
+            ✕
+          </button>
+        )}
+        {isOpen && (
+          <ul className="absolute left-1/2 transform -translate-x-1/2 text-center bg-white border border-gray-200 w-52 max-h-56 overflow-y-scroll rounded shadow-lg mt-1">
+            {filteredCountries.map((country, index) => (
+              <li
+                key={index}
+                className="p-2 hover:bg-gray-100 cursor-pointer"
+                onClick={() => {
+                  onSelectedCountry(country.key)
+                  setInputValue(country.key)
+                  setIsOpen(false)
+                }}
+              >
+                {country.key}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   )
 }

@@ -69,7 +69,7 @@ export default function Graph({ selectedCountry }: GraphProps) {
     }
   }, [isVisible, countryData])
 
-  const drawChart = () => {
+  const drawChart = (dataSubset?: Country[] | null) => {
     const width = 500
     const height = 500
     const margin = 40
@@ -85,18 +85,22 @@ export default function Graph({ selectedCountry }: GraphProps) {
       .attr("transform", `translate(${width / 2}, ${height / 2})`)
 
     const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius)
-
     const totalQuantity = d3.sum(countryData, (d) => d.foodQuantityInTons)
     const threshold = totalQuantity * 0.05;
-
+    
     const largeValues = countryData.filter(
       (d) => d.foodQuantityInTons > threshold
     );
+    const otherValues = countryData.filter(
+      (d) => d.foodQuantityInTons < threshold
+    );   
     const otherValuesTotal = d3.sum(
       countryData.filter((d) => d.foodQuantityInTons <= threshold),
       (d) => d.foodQuantityInTons
     );
 
+    const dataToDisplay = dataSubset ? dataSubset : largeValues
+    
     if (otherValuesTotal > 0) {
       largeValues.push({
         name: "Other",
@@ -109,14 +113,14 @@ export default function Graph({ selectedCountry }: GraphProps) {
     const otherColor = "#18B05A"
 
     const pie = d3.pie().value((d) => d.foodQuantityInTons)
-    const data_ready = pie(largeValues)
-
+    const dataReady = pie(dataToDisplay)
+    
     const tooltip = d3.select(".tooltip")
 
     // Create the arc paths and animate them
     svg
       .selectAll("path")
-      .data(data_ready)
+      .data(dataReady)
       .enter()
       .append("path")
       .attr("fill", (d) =>
@@ -151,13 +155,18 @@ export default function Graph({ selectedCountry }: GraphProps) {
       .on("mouseout", function () {
         tooltip.style("opacity", 0).style("display", "none");
       })
+      .on("click", function (event, d) {
+        if (d.data.foodName === "Other") {
+          drawChart(otherValues)
+        }
+      })
 
     svg
       .selectAll("text")
-      .data(data_ready)
+      .data(dataReady)
       .enter()
       .append("text")
-      .filter((d) => d.data.foodQuantityInTons > threshold)
+      // .filter((d) => d.data.foodQuantityInTons > threshold)
       .text((d) => d.data.foodName)
       .attr("transform", (d) => `translate(${arcGenerator.centroid(d)})`)
       .style("text-anchor", "middle")

@@ -1,22 +1,9 @@
 import express from 'express'
 import { ElasticController } from '../controllers/elastic-controller.js'
+import { authorize } from '../config/authorize.js'
 
 export const elasticRouter = express.Router()
-
 const controller = new ElasticController()
-
-// Middleware to check API key
-const authorize = (req, res, next) => {
-  // Custom header for API key
-  const apiKey = req.get('X-API-Key')
-  const knownApiKey = process.env.KNOWN_API_KEY
-
-  if (!apiKey || apiKey !== knownApiKey) {
-      return res.status(401).json({ error: 'Unauthorized' })
-  }
-
-  next()
-}
 
 // Endpoint to post data to Elasticsearch. /elastic
 elasticRouter.post('/', authorize, (req, res, next) => {

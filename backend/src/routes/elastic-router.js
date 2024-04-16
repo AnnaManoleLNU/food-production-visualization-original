@@ -5,9 +5,21 @@ export const elasticRouter = express.Router()
 
 const controller = new ElasticController()
 
+// Middleware to check API key
+const authorize = (req, res, next) => {
+  // Custom header for API key
+  const apiKey = req.get('X-API-Key')
+  const knownApiKey = process.env.KNOWN_API_KEY
+
+  if (!apiKey || apiKey !== knownApiKey) {
+      return res.status(401).json({ error: 'Unauthorized' })
+  }
+
+  next()
+}
+
 // Endpoint to post data to Elasticsearch. /elastic
-elasticRouter.post('/', (req, res, next) => {
-  // Require authorization especially if public API - TODO!!!
+elasticRouter.post('/', authorize, (req, res, next) => {
   controller.uploadDataToElasticSearch(req, res, next)
 })
 
@@ -32,7 +44,6 @@ elasticRouter.get('/foods', (req, res, next) => {
 })
 
 // Delete data from Elasticsearch. /elastic
-elasticRouter.delete('/', (req, res, next) => {
-  // Require authorization especially if public API - TODO!!!
+elasticRouter.delete('/', authorize, (req, res, next) => {
   controller.deleteDataFromElasticSearch(req, res, next)
 })

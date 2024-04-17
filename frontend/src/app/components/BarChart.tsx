@@ -95,5 +95,18 @@ export default function BarChart({ selectedCountry }: GraphProps) {
       .attr("fill", "#1E3A8A");
   };
 
-  return <>{isVisible && <div ref={barContainer}></div>}</>;
+  return (
+    <div className="flex flex-col justify-center items-center text-center">
+      {isVisible && 
+      <div>
+      <p className="text-3xl font-bold text-green-600">Data at a glace</p>
+      <p className="text-sm">Here is how the food production looked like in {selectedCountry} in 2018.</p>
+      </div>
+      }
+      {isVisible && (
+        <div ref={barContainer}>
+        </div>
+      )}
+    </div>
+  );
 }

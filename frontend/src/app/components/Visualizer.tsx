@@ -18,7 +18,7 @@ export default function Visualizer() {
         selectedCountry={selectedCountry}
         onSelectedCountry={handleSelectCountry}
        />
-       <div className="flex justify-center items-center" >
+       <div className="flex justify-center items-center gap-20" >
       <Pie 
         selectedCountry={selectedCountry}
       />

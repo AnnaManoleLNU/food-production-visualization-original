@@ -66,7 +66,7 @@ export default function Dropdown({selectedCountry, onSelectedCountry} : Dropdown
   )
 
   return (
-    <div className="flex justify-center items-center" >
+    <div className="flex justify-center items-center mb-20" >
       <div className="relative" ref={dropdownComponent}>
         <input
           type="text"

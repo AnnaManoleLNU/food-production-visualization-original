@@ -161,8 +161,16 @@ export default function Pie({ selectedCountry }: GraphProps) {
 
   return (
     <div className="flex flex-col justify-center items-center text-center">
+      {isVisible && 
+      <div>
+        <p className="text-3xl font-bold text-green-600">Interactive data</p>
+        <p className="text-sm">Click on "Other" to display more information. Click on any food to go back to the start.</p>
+        </div>
+      }
                     
-      {isVisible &&  <div ref={pieContainer}></div>}
+      {isVisible && <div ref={pieContainer}>
+      </div>
+      }
     </div>
   )
 }

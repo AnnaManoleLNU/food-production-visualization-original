@@ -4,6 +4,6 @@ type TitleProps = {
 
 export default function TitleComponent(props: TitleProps) {
   return (
-    <h1 className="text-center mt-32 mb-12 text-6xl font-black text-blue-900">{props.children}</h1>
+    <h1 className="text-center mt-20 mb-12 text-6xl font-black text-blue-900">{props.children}</h1>
   )
 }

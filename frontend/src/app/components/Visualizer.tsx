@@ -11,7 +11,8 @@ export default function Visualizer() {
   }
 
   return (
-    <div>
+    // React fragment.
+    <> 
       <Dropdown
         selectedCountry={selectedCountry}
         onSelectedCountry={handleSelectCountry}
@@ -19,6 +20,6 @@ export default function Visualizer() {
       <Graph 
         selectedCountry={selectedCountry}
       />
-    </div>
+    </>
   )
 }

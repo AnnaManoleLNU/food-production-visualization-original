@@ -62,11 +62,11 @@ export default function Graph({ selectedCountry }: GraphProps) {
     }
   }, [isVisible, countryData])
 
-  const drawChart = (data, initial = false) => {
-    const totalQuantity = d3.sum(data, d => d.foodQuantityInTons)
+  const drawChart = (data: Country[], initial = false) => {
+    const totalQuantity = d3.sum(data, (d: Country) => d.foodQuantityInTons)
     const threshold = totalQuantity * 0.05
     let dataToDisplay = data.filter(d => d.foodQuantityInTons > threshold)
-    const otherQuantity = totalQuantity - d3.sum(dataToDisplay, d => d.foodQuantityInTons)
+    const otherQuantity = totalQuantity - d3.sum(dataToDisplay, (d: Country) => d.foodQuantityInTons)
 
     if (otherQuantity > threshold || initial) {
       dataToDisplay.push({
@@ -89,7 +89,7 @@ export default function Graph({ selectedCountry }: GraphProps) {
       .append("g")
       .attr("transform", `translate(${width / 2}, ${height / 2})`)
 
-    const pie = d3.pie().value(d => d.foodQuantityInTons)
+    const pie = d3.pie().value((d: Country) => d.foodQuantityInTons)
     const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius)
     const color = d3.scaleOrdinal([
       "#abd9e9", "#74add1", "#4575b4", "#313695"  // Example shades of blue

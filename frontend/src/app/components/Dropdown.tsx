@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 type Country = {
   key: string
@@ -14,6 +14,23 @@ export default function Dropdown({selectedCountry, onSelectedCountry} : Dropdown
   const [isOpen, setIsOpen] = useState(false)
   const [countries, setCountries] = useState<Country[]>([])
   const [inputValue, setInputValue] = useState("")
+  const wrapperRef = useRef(null)
+
+  const useOutsideClick = (ref: any) => {
+    useEffect(() => {
+      function handleClickOutside(event: any) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setIsOpen(false)
+        }
+      }
+      document.addEventListener("mousedown", handleClickOutside)
+      return() => {
+        document.removeEventListener("mousedown", handleClickOutside)
+      }
+    }, [ref])
+  }
+
+  useOutsideClick(wrapperRef)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +66,7 @@ export default function Dropdown({selectedCountry, onSelectedCountry} : Dropdown
   )
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center" ref={wrapperRef}>
       <div className="relative">
         <input
           type="text"
@@ -58,11 +75,11 @@ export default function Dropdown({selectedCountry, onSelectedCountry} : Dropdown
           onClick={() => setIsOpen(true)}
           placeholder="Choose a country"
           className="text-center border border-blue-900 py-2 px-4 rounded hover:border-blue-300 focus:outline-none"
-        />
+          />
         {inputValue && (
           <button
             onClick={handleClearInput}
-            className="absolute right-0 top-0 mt-3 mr-4"
+            className="absolute text-green-500 font-bold right-0 top-0 mt-2 mr-4"
           >
             ✕
           </button>

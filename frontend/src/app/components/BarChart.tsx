@@ -47,8 +47,8 @@ export default function BarChart({ selectedCountry }: GraphProps) {
   }, [isVisible, countryData]);
 
   const drawBarChart = (data: Country[]) => {
-    const margin = { top: 30, right: 30, bottom: 70, left: 60 },
-      width = 800 - margin.left - margin.right,
+    const margin = { top: 30, right: 30, bottom: 70, left: 70 },
+      width = 850 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
     const svg = d3
@@ -89,10 +89,18 @@ export default function BarChart({ selectedCountry }: GraphProps) {
       .enter()
       .append("rect")
       .attr("x", (d) => x(d.foodName))
-      .attr("y", (d) => y(d.foodQuantityInTons))
+      .attr("y", (d) => y(0))
       .attr("width", x.bandwidth())
-      .attr("height", (d) => height - y(d.foodQuantityInTons))
-      .attr("fill", "#1E3A8A");
+      .attr("height", (d) => height - y(0)) // no height at the start
+      .attr("fill", "#1E3A8A")
+
+      // Animation
+      svg.selectAll("rect")
+        .transition()
+        .duration(750)
+        .attr("y", function(d) { return y(d.foodQuantityInTons); })
+        .attr("height", function(d) { return height - y(d.foodQuantityInTons); })
+        .delay(function(d,i){console.log(i) ; return(i*100)})
   };
 
   return (

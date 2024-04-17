@@ -106,6 +106,11 @@ export default function Pie({ selectedCountry }: GraphProps) {
       .attr("stroke", "white")
       .style("stroke-width", "2px")
       .on("mouseover", function (event, d) {
+        if (d.data.foodName === "Other") {
+          d3.select(this).style("transform", "scale(1.1)")
+          .style("transition", "transform 0.2s")
+          .style("cursor", "pointer")
+        }
         d3.select(".tooltip")
           .style("display", "block")
           .style("opacity", 1)
@@ -113,15 +118,20 @@ export default function Pie({ selectedCountry }: GraphProps) {
           .style("left", `${event.pageX}px`)
           .style("top", `${event.pageY - 28}px`)
       })
-      .on("mouseout", function () {
+      .on("mouseout", function (event, d) {
+        if (d.data.foodName === "Other") {
+          d3.select(this).style("transform", "scale(1)")
+        }
         d3.select(".tooltip")
           .style("opacity", 0)
           .style("display", "none")
+
       })
       .on("click", (event, d) => {
         if (d.data.foodName === "Other") {
           drawPieChart(data.filter(d => d.foodQuantityInTons <= threshold), false)
-        } else {
+        }
+        else {
           drawPieChart(countryData, true)
         }
       })

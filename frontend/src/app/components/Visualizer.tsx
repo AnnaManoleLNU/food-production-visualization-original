@@ -1,6 +1,7 @@
 "use client"
+import BarChart from "./BarChart"
 import Dropdown from "./Dropdown"
-import Graph from "./Graph"
+import Pie from "./Pie"
 import { useState } from "react"
 
 export default function Visualizer() {
@@ -17,9 +18,14 @@ export default function Visualizer() {
         selectedCountry={selectedCountry}
         onSelectedCountry={handleSelectCountry}
        />
-      <Graph 
+       <div className="flex justify-center items-center" >
+      <Pie 
         selectedCountry={selectedCountry}
       />
+      <BarChart
+         selectedCountry={selectedCountry}
+        />
+        </div>
     </>
   )
 }

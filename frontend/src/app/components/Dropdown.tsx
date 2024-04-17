@@ -14,7 +14,7 @@ export default function Dropdown({selectedCountry, onSelectedCountry} : Dropdown
   const [isOpen, setIsOpen] = useState(false)
   const [countries, setCountries] = useState<Country[]>([])
   const [inputValue, setInputValue] = useState("")
-  const wrapperRef = useRef(null)
+  const dropdownComponent = useRef(null)
 
   const useOutsideClick = (ref: any) => {
     useEffect(() => {
@@ -30,7 +30,7 @@ export default function Dropdown({selectedCountry, onSelectedCountry} : Dropdown
     }, [ref])
   }
 
-  useOutsideClick(wrapperRef)
+  useOutsideClick(dropdownComponent)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,8 +66,8 @@ export default function Dropdown({selectedCountry, onSelectedCountry} : Dropdown
   )
 
   return (
-    <div className="flex justify-center items-center" ref={wrapperRef}>
-      <div className="relative">
+    <div className="flex justify-center items-center" >
+      <div className="relative" ref={dropdownComponent}>
         <input
           type="text"
           value={inputValue}

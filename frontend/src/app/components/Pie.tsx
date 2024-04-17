@@ -11,10 +11,10 @@ type Country = {
   foodQuantityInTons: number
 }
 
-export default function Graph({ selectedCountry }: GraphProps) {
+export default function Pie({ selectedCountry }: GraphProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [countryData, setCountryData] = useState<Country[]>([])
-  const d3Container = useRef(null)
+  const pieContainer = useRef(null)
 
   useEffect(() => {
     if (d3.select("body").selectAll(".tooltip").empty()) {
@@ -58,11 +58,11 @@ export default function Graph({ selectedCountry }: GraphProps) {
 
   useEffect(() => {
     if (isVisible && countryData.length > 0) {
-      drawChart(countryData, true)
+      drawPieChart(countryData, true)
     }
   }, [isVisible, countryData])
 
-  const drawChart = (data: Country[], initial = false) => {
+  const drawPieChart = (data: Country[], initial = false) => {
     const totalQuantity = d3.sum(data, (d: Country) => d.foodQuantityInTons)
     const threshold = totalQuantity * 0.05
     let dataToDisplay = data.filter(d => d.foodQuantityInTons > threshold)
@@ -81,7 +81,7 @@ export default function Graph({ selectedCountry }: GraphProps) {
     const margin = 40
     const radius = Math.min(width, height) / 2 - margin
 
-    const svg = d3.select(d3Container.current)
+    const svg = d3.select(pieContainer.current)
       .html("")
       .append("svg")
       .attr("width", width)
@@ -120,9 +120,9 @@ export default function Graph({ selectedCountry }: GraphProps) {
       })
       .on("click", (event, d) => {
         if (d.data.foodName === "Other") {
-          drawChart(data.filter(d => d.foodQuantityInTons <= threshold), false)
+          drawPieChart(data.filter(d => d.foodQuantityInTons <= threshold), false)
         } else {
-          drawChart(countryData, true)
+          drawPieChart(countryData, true)
         }
       })
       .each(function(d) { this._current = { startAngle: d.startAngle, endAngle: d.startAngle } })
@@ -151,9 +151,8 @@ export default function Graph({ selectedCountry }: GraphProps) {
 
   return (
     <div className="flex flex-col justify-center items-center text-center">
-                    <p className="mt-4 mb-6 text-sm">Click on "Other" to display more information. Click on any food to go back to the start.<br /><strong> Note that the data may be innacurate. </strong>
-                    </p>
-      {isVisible &&  <div ref={d3Container}></div>}
+                    
+      {isVisible &&  <div ref={pieContainer}></div>}
     </div>
   )
 }

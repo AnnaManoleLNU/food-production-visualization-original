@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
-import { count } from "console";
 
 type GraphProps = {
   selectedCountry: string | null;
@@ -36,6 +35,28 @@ export default function BarChart({ selectedCountry }: GraphProps) {
       setIsVisible(false);
     }
   }, [selectedCountry]);
+
+  useEffect(() => {
+    if (d3.select("body").selectAll(".tooltipBar").empty()) {
+      d3.select("body")
+        .append("div")
+        .attr("class", "tooltipBar")
+        .style("position", "absolute")
+        .style("text-align", "center")
+        .style("padding", "8px")
+        .style("background", "white")
+        .style("border", "solid")
+        .style("border-color", "#1e3a8a")
+        .style("border-width", "1px")
+        .style("border-radius", "5px")
+        .style("pointer-events", "none")
+        .style("display", "none");
+    }
+
+    return () => {
+      d3.select(".tooltipBar").remove();
+    };
+  }, []);
 
   useEffect(() => {
     // Clear the container before redrawing it
@@ -78,7 +99,7 @@ export default function BarChart({ selectedCountry }: GraphProps) {
     const y = d3
       .scaleLinear()
       .range([height, 0])
-      .domain([0, d3.max(data, (d) => d.foodQuantityInTons)]);
+      .domain([0, d3.max(data, (d: Country) => d.foodQuantityInTons)]);
 
     svg.append("g").call(d3.axisLeft(y));
 
@@ -88,33 +109,51 @@ export default function BarChart({ selectedCountry }: GraphProps) {
       .data(data)
       .enter()
       .append("rect")
-      .attr("x", (d) => x(d.foodName))
-      .attr("y", (d) => y(0))
+      .attr("x", (d: Country) => x(d.foodName))
+      .attr("y", () => y(0)) // no y at the start
       .attr("width", x.bandwidth())
-      .attr("height", (d) => height - y(0)) // no height at the start
+      .attr("height", () => height - y(0)) // no height at the start
       .attr("fill", "#1E3A8A")
+      .on("mouseover", function (event:any, d:any) {
+        d3.select(".tooltipBar")
+          .style("display", "block")
+          .style("opacity", 1)
+          .html(`${d.foodName}: ${d.foodQuantityInTons} tons`)
+          .style("left", `${event.pageX}px`)
+          .style("top", `${event.pageY - 28}px`);
+      })
+      .on("mouseout", function () {
+        d3.select(".tooltipBar").style("display", "none");
+      });
 
-      // Animation
-      svg.selectAll("rect")
-        .transition()
-        .duration(750)
-        .attr("y", function(d) { return y(d.foodQuantityInTons); })
-        .attr("height", function(d) { return height - y(d.foodQuantityInTons); })
-        .delay(function(d,i){console.log(i) ; return(i*100)})
+    // Animation
+    svg
+      .selectAll("rect")
+      .transition()
+      .duration(750)
+      .attr("y", function (d: Country) {
+        return y(d.foodQuantityInTons);
+      })
+      .attr("height", function (d: Country) {
+        return height - y(d.foodQuantityInTons);
+      })
+      .delay(function (d: Country, i: number) {
+        return i * 100;
+      });
   };
 
   return (
     <div className="flex flex-col justify-center items-center text-center">
-      {isVisible && 
-      <div>
-      <p className="text-3xl font-bold text-green-600">Data at a glace</p>
-      <p className="text-sm">Here is how the food production looked like in {selectedCountry} in 2018.</p>
-      </div>
-      }
       {isVisible && (
-        <div ref={barContainer}>
+        <div>
+          <p className="text-3xl font-bold text-green-600">Data at a glace</p>
+          <p className="text-sm">
+            Here is how the food production looked like in {selectedCountry} in
+            2018.
+          </p>
         </div>
       )}
+      {isVisible && <div ref={barContainer}></div>}
     </div>
   );
 }

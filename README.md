@@ -1,6 +1,4 @@
-# Food production Romania and Sweden
-
-Replace this with the name of your project. It should be a brief and catchy title that accurately represents your application.
+# Global Food Production 2018
 
 ## Project Description
 

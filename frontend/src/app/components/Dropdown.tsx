@@ -6,15 +6,16 @@ type Country = {
 }
 
 type DropdownProps = {
-  selectedCountry: string | null
   onSelectedCountry: (country: string) => void
+  selectedFood: (food: string, quantity: number) => void
 }
 
-export default function Dropdown({selectedCountry, onSelectedCountry} : DropdownProps) {
+export default function Dropdown({ selectedFood, onSelectedCountry} : DropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [countries, setCountries] = useState<Country[]>([])
   const [inputValue, setInputValue] = useState("")
   const dropdownComponent = useRef(null)
+
 
   const useOutsideClick = (ref: any) => {
     useEffect(() => {
@@ -59,6 +60,7 @@ export default function Dropdown({selectedCountry, onSelectedCountry} : Dropdown
     setInputValue("")
     setIsOpen(false)
     onSelectedCountry("") // Notify the parent component that no country is selected
+    selectedFood("", 0) // Notify the parent component that no food is selected
   }
 
   const filteredCountries = countries.filter(country =>

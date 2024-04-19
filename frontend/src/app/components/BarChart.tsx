@@ -116,6 +116,7 @@ export default function BarChart({ selectedCountry, onSelectedFood }: GraphProps
       .attr("height", () => height - y(0)) // no height at the start
       .attr("fill", "#1E3A8A")
       .on("mouseover", function (event:any, d:Country) {
+        const element = event.currentTarget;
         // make the bar lighter
         d3.select(event.currentTarget).style("opacity", 0.7);
         d3.select(".tooltipBar")

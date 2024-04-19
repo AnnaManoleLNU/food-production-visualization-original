@@ -24,7 +24,7 @@ export default function Visualizer() {
         onSelectedCountry={handleSelectCountry}
         selectedFood={handleSelectFood}
        />
-       <div className="flex justify-center items-center gap-20" >
+       <div className="flex justify-center items-center flex-col gap-20 md:flex-col desktop:flex-row desktop:gap-20" >
       <Pie 
         selectedCountry={selectedCountry}
       />

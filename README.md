@@ -41,7 +41,7 @@ To start the application either write the country name (autofill enabled) in the
 
 ![alt text](image.png)
 
-The left graph displays the total food production for the country selected, with foods under the threshold of 5% being grouped up into the "Other" category. This is to better display the data when it comes to a pie and not have values be tiny in relation to the large ones. Clicking on other will display all the foods under the threshold, until no more foods are under the threshold. Clicking on any other food, at any other point during the pie will take the user back to the original pie, with the overall data representation. Tooltips are present for more information.
+The left graph displays the total food production for the country selected, with foods under the threshold of 5% being grouped up into the "Other" category. This is to better display the data when as a pie in order to not have values values that are unreadable. Clicking on other will display all the foods under the threshold, until no more foods are under the threshold. Clicking on any other food, at any other point during the pie will take the user back to the original pie, with the overall data representation. Tooltips are present for more information.
 
 ![alt text](image-1.png)
 

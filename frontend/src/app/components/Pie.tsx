@@ -66,7 +66,7 @@ export default function Pie({ selectedCountry }: GraphProps) {
 
   const drawPieChart = (data: Country[], initial = false) => {
     const totalQuantity = d3.sum(data, (d: Country) => d.foodQuantityInTons);
-    const threshold = totalQuantity * 0.05;
+    const threshold = totalQuantity * 0.05; 
     let dataToDisplay = data.filter((d) => d.foodQuantityInTons > threshold);
     const otherQuantity =
       totalQuantity -

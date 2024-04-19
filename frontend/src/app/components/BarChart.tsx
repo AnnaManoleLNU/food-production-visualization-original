@@ -115,9 +115,9 @@ export default function BarChart({ selectedCountry, onSelectedFood }: GraphProps
       .attr("width", x.bandwidth())
       .attr("height", () => height - y(0)) // no height at the start
       .attr("fill", "#1E3A8A")
-      .on("mouseover", function (event:any, d:any) {
+      .on("mouseover", function (event:any, d:Country) {
         // make the bar lighter
-        d3.select(this).style("opacity", 0.7);
+        d3.select(event.currentTarget).style("opacity", 0.7);
         d3.select(".tooltipBar")
           .style("display", "block")
           .style("opacity", 1)
@@ -125,9 +125,9 @@ export default function BarChart({ selectedCountry, onSelectedFood }: GraphProps
           .style("left", `${event.pageX}px`)
           .style("top", `${event.pageY - 28}px`);
       })
-      .on("mouseout", function () {
+      .on("mouseout", function (event:any) {
         // make the bar normal
-        d3.select(this).style("opacity", 1);
+        d3.select(event.currentTarget).style("opacity", 1);
         d3.select(".tooltipBar").style("display", "none");
       })
       .on("click", function(event:any, d:any) {
@@ -155,7 +155,7 @@ export default function BarChart({ selectedCountry, onSelectedFood }: GraphProps
     <div className="flex flex-col justify-center items-center text-center">
       {isVisible && (
         <div>
-          <p className="text-3xl font-bold text-green-600">Data at a glace</p>
+          <p className="text-3xl font-bold text-green-600">Data summary</p>
           <p className="text-sm">
             Click on any bar to display more information in relation to global production.
           </p>

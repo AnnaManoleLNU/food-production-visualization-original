@@ -117,7 +117,7 @@ export default function Pie({ selectedCountry }: GraphProps) {
       .style("stroke-width", "2px")
       .on("mouseover", function (event: any, d: any) {
         if (d.data.foodName === "Other") {
-          d3.select(this)
+          d3.select(event.currentTarget)
             .style("transform", "scale(1.1)")
             .style("transition", "transform 0.2s")
             .style("cursor", "pointer");
@@ -131,7 +131,7 @@ export default function Pie({ selectedCountry }: GraphProps) {
       })
       .on("mouseout", function (event: any, d: any) {
         if (d.data.foodName === "Other") {
-          d3.select(this).style("transform", "scale(1)");
+          d3.select(event.currentTarget).style("transform", "scale(1)");
         }
         d3.select(".tooltip").style("opacity", 0).style("display", "none");
       })
@@ -178,9 +178,9 @@ export default function Pie({ selectedCountry }: GraphProps) {
     <div className="flex flex-col justify-center items-center text-center">
       {isVisible && (
         <div>
-          <p className="text-3xl font-bold text-green-600">Interactive data</p>
+          <p className="text-3xl font-bold text-green-600">Data at a glace</p>
           <p className="text-sm">
-            Click on "Other" to display more information. Click on any food to
+            Click on "Other" to see more. Click on any food to
             go back to the start.
           </p>
         </div>

@@ -29,7 +29,7 @@ try {
 
   app.use(cors({
     // Allow requests from my local machine and my deployed Vercel app.
-    origin: ['http://localhost:3000', 'https://food-production-visualization.vercel.app/'],
+    origin: ['http://localhost:3000', 'https://food-production-visualization.vercel.app'],
 }))
 
   // Register routes.

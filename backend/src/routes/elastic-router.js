@@ -12,7 +12,7 @@ elasticRouter.post('/', authorize, (req, res, next) => {
 
 // Endpoint to get data from Elasticsearch. /elastic
 elasticRouter.get('/', (req, res, next) => {
-  controller.getAllDataYear2018(req, res, next)
+  controller.getAllData(req, res, next)
 })
 
 // Endpoint to get all data for a specific country from Elasticsearch. /elastic/countries/:country

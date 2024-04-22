@@ -1,6 +1,9 @@
 import { Client } from '@elastic/elasticsearch'
 import { Country } from '../models/country.js'
 
+/**
+ * Controller for handling requests related to Elasticsearch, the data is uploaded to Elasticsearch from MongoDB and has only the year 2018.
+ */
 export class ElasticController {
   #client = new Client({
     node: 'https://localhost:9200',
@@ -13,6 +16,13 @@ export class ElasticController {
     }
   })
 
+  /**
+   * Uploads data to Elasticsearch.
+   *
+   * @param {*} req - Request object.
+   * @param {*} res - Response object.
+   * @param {*} next - Next middleware function.
+   */
   async uploadDataToElasticSearch(req, res, next) {
     try {
       // if there is no index, create one
@@ -66,7 +76,14 @@ export class ElasticController {
     }
   }
 
-  async getAllDataYear2018(req, res, next) {
+  /**
+   * Gets all the data from Elasticsearch.
+   *
+   * @param {*} req - Request object.
+   * @param {*} res - Response object.
+   * @param {*} next - Next middleware function.
+   */
+  async getAllData(req, res, next) {
     try {
       const response = await this.#client.search({
         index: 'countries',
@@ -84,6 +101,13 @@ export class ElasticController {
     }
   }
 
+  /**
+   * Gets all the data for a specific country from Elasticsearch. 
+   *
+   * @param {*} req - Request object.
+   * @param {*} res - Response object.
+   * @param {*} next - Next middleware function.
+   */
   async getDataForCountry(req, res, next) {
     try {
       const { country } = req.params
@@ -110,6 +134,13 @@ export class ElasticController {
     }
   }
 
+  /**
+   * Gets all the names of the countries from Elasticsearch index countries.
+   *
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   */
   async getAllCountryNames(req, res, next) {
     try {
       const response = await this.#client.search({
@@ -136,6 +167,13 @@ export class ElasticController {
     }
   }
 
+  /**
+   * Gets all the names of the food types from Elasticsearch index countries.
+   *
+   * @param {*} req - Request object.
+   * @param {*} res - Response object.
+   * @param {*} next - Next middleware function.
+   */
   async getAllFoodNames(req, res, next) {
     try {
       const response = await this.#client.search({
@@ -162,6 +200,13 @@ export class ElasticController {
     }
   }
 
+  /**
+   * Deletes the index countries if it exists.
+   *
+   * @param {*} req - Request object.
+   * @param {*} res - Response object.
+   * @param {*} next - Next middleware function.
+   */
   async deleteDataFromElasticSearch(req, res, next) {
     try {
       if (await this.#client.indices.exists({ index: 'countries' })) {

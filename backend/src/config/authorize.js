@@ -1,4 +1,4 @@
-// Middleware to check API key
+// Middleware to check API key for sensitives requests such as posting data and deleting data.
 export const authorize = (req, res, next) => {
   // Custom header for API key
   const apiKey = req.get('X-API-Key')

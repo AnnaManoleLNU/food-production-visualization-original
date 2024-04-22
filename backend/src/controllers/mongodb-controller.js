@@ -2,7 +2,17 @@ import fs from 'fs-extra'
 import { Country } from '../models/country.js'
 import { getNames } from 'country-list'
 
+/**
+ * Controller that handles requests related to MongoDB.
+ */
 export class MongoDbController {
+  /**
+   * Uploads data to the MongoDB database by reading the data from the world_food_production.json file. Filers out the data for the year 2018 and Entity (Country) names that are not valid according to the country-list package.
+   *
+   * @param {*} req - Request object.
+   * @param {*} res - Response object.
+   * @param {*} next - Next middleware function.
+   */
   async uploadDataToDatabase(req, res, next) {
     try {
       const countriesData = await fs.readJSON('./world_food_production.json')
@@ -49,10 +59,22 @@ export class MongoDbController {
     }
   }
 
+  /**
+   * Checks if a country name is valid.
+   *
+   * @param {String} countryName - The name of the country to check if it's valid.
+   * @returns 
+   */
   #isValidCountry(countryName) {
     return getNames().includes(countryName)
   }
 
+  /**
+   * Extracts the food name from the key.
+   *
+   * @param {String} key - The key to extract the food name from.
+   * @returns - The food name.
+   */
   #extractFoodName(key) {
     // Use a regular expression to match everything before "Production"
     const match = key.match(/^(.*?) Production/)

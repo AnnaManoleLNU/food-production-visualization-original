@@ -41,7 +41,7 @@ Clicking on the "x" inside the original input for selecting a country will reset
 
 ## Link to the Deployed Application
 
-Link to the application: 
+Link to the application: https://food-production-visualization.vercel.app/ 
 
 ## Acknowledgements
 

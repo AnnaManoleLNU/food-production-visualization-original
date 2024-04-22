@@ -145,12 +145,12 @@ export default function Pie({ selectedCountry }: GraphProps) {
           drawPieChart(countryData, true);
         }
       })
-      .each(function (d: any) {
+      .each(function (this: any, d: any) {
         this._current = { startAngle: d.startAngle, endAngle: d.startAngle };
       })
       .transition()
       .duration(750)
-      .attrTween("d", function (d: any) {
+      .attrTween("d", function (this: any, d: any) {
         const interpolate = d3.interpolate(this._current, d);
         this._current = interpolate(0);
         return function (t: any) {

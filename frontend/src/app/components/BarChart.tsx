@@ -22,7 +22,7 @@ export default function BarChart({ selectedCountry, onSelectedFood }: GraphProps
       setIsVisible(true);
       const fetchData = async () => {
         const response = await fetch(
-          `http://localhost:3001/elastic/countries/${selectedCountry}`
+          `https://cscloud6-228.lnu.se/wt2/elastic/countries/${selectedCountry}`
         );
         if (!response.ok) {
           console.error("Failed to fetch:", response.statusText);

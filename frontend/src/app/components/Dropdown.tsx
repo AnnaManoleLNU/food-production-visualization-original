@@ -36,7 +36,7 @@ export default function Dropdown({ selectedFood, onSelectedCountry} : DropdownPr
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3001/elastic/countries")
+        const response = await fetch("https://cscloud6-228.lnu.se/wt2/elastic/countries")
         if (!response.ok) {
           throw new Error(`Failed to fetch: ${response.statusText}`)
         }

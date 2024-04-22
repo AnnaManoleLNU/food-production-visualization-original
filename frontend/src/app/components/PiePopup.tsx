@@ -45,7 +45,7 @@ export default function PiePopup({ selectedFood, selectedCountry }: FoodProps) {
     if (selectedFood?.name && selectedFood?.quantity) {
       setIsVisible(true);
       const fetchData = async () => {
-        const response = await fetch("http://localhost:3001/elastic/");
+        const response = await fetch("https://cscloud6-228.lnu.se/wt2/elastic/");
         if (!response.ok) {
           console.error("Failed to fetch:", response.statusText);
           return;

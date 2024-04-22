@@ -28,9 +28,9 @@ try {
   app.use(helmet())
 
   app.use(cors({
-    // Allow requests from the frontend.
-    origin: 'http://localhost:3000'
-  }))
+    // Allow requests from my local machine and my deployed Vercel app.
+    origin: ['http://localhost:3000', 'https://food-production-visualization.vercel.app/'],
+}))
 
   // Register routes.
   app.use('/', router)

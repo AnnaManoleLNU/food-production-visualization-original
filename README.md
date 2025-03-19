@@ -45,7 +45,7 @@ Link to the application: https://food-production-visualization.vercel.app/
 
 ## Acknowledgements
 
-Link to the dataset: https://www.kaggle.com/datasets/rafsunahmad/world-food-production/data 
-Link to bar chart with animation tutorial: https://d3-graph-gallery.com/graph/barplot_animation_start.html
-Link to pie chart tutorials: https://d3-graph-gallery.com/pie.html 
-Inspiration for pie chart animation: https://observablehq.com/d/0644a8df66dd6bab 
+- Dataset: https://www.kaggle.com/datasets/rafsunahmad/world-food-production/data 
+- Bar chart with animation tutorial: https://d3-graph-gallery.com/graph/barplot_animation_start.html
+- Pie chart tutorials: https://d3-graph-gallery.com/pie.html 
+- Inspiration for pie chart animation: https://observablehq.com/d/0644a8df66dd6bab 

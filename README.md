@@ -1,5 +1,9 @@
 # Global Food Production 2018
 
+## Link to the Deployed Application
+
+Link to the application: https://food-production-visualization.vercel.app/ 
+
 ## Project Description
 
 The application presents the food production of 154 countries in 2018. The data set includes 22 foods. Each country's food production of the included foods in presented in tons. The application presents the data both summarized or in detail. The user is able to see the percentage of a certain food's production in relation to the global production for the selected country.
@@ -38,10 +42,6 @@ The right graph displays the total food production for the country selected with
 Clicking on the "x" inside the original input for selecting a country will reset the application and the user will be able to select another country if he/she so wishes.
 
 ![alt text](image-3.png)
-
-## Link to the Deployed Application
-
-Link to the application: https://food-production-visualization.vercel.app/ 
 
 ## Acknowledgements
 
